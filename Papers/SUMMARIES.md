@@ -20,6 +20,14 @@
 > - These skills are often unreliable, incomplete, or outdated.
 > - Existing skill-evolution methods often address these deficiencies through heuristic reflections without an explicit optimization formulation.
 
+> **This work**  
+> **SkillGrad** is a gradient-descent-inspired framework for optimizing agent skills. It treats the skill package as a structured parameter and optimizes it in a gradient-descent-like loop:
+>
+> 1. **Loss evidence** — Task executions produce trajectory-level outcomes that serve as loss signals.
+> 2. **Text-based gradients** — Automatic diagnoses convert that evidence into correction directions (analogous to per-example gradients).
+> 3. **Momentum** — A momentum agent accumulates recurring diagnostic patterns into a persistent memory overlay, stabilizing optimization across iterations.
+> 4. **Parameter update** — An LLM-based patcher applies layer-aware edits to the skill package, producing the next version of the skill.
+
 > _Summary placeholder — fill in later._
 
 ---
