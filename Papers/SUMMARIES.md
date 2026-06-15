@@ -16,6 +16,19 @@
 > **Background — What is an Agent Skill?**  
 > Agent skills provide a lightweight way to adapt LLM agents to specialized domains by storing reusable procedural knowledge in structured files.
 
+<details>
+<summary><strong>More background</strong></summary>
+
+Many practical agent applications require more than general problem-solving ability. In specialized, procedure-heavy domains, such as codebase maintenance, agents must repeatedly follow domain-specific workflows.
+
+Adapting agents to various domains through approaches such as fine-tuning can be costly, especially when the needed knowledge is procedural rather than purely factual.
+
+To bridge this gap, agent skills offer a lightweight alternative. Unlike a flat prompt, a skill is a structured artifact.
+
+Skill quality matters a great deal. That raises a natural question: can we treat a skill as an optimizable artifact and systematically improve it after initialization?
+
+</details>
+
 > **Current challenges**  
 > - These skills are often unreliable, incomplete, or outdated.
 > - Existing skill-evolution methods often address these deficiencies through heuristic reflections without an explicit optimization formulation.
