@@ -10,7 +10,8 @@
 
 ## 1. SkillGrad: Optimizing Agent Skills Like Gradient Descent
 
-**ArXiv:** https://arxiv.org/abs/2605.27760
+**ArXiv:** https://arxiv.org/abs/2605.27760  
+**Code:** https://github.com/wwwhy725/SkillGrad
 
 > _Summary placeholder — fill in later._
 
@@ -18,7 +19,8 @@
 
 ## 2. SkillOpt: Executive Strategy for Self-Evolving Agent Skills
 
-**ArXiv:** https://arxiv.org/abs/2605.23904
+**ArXiv:** https://arxiv.org/abs/2605.23904  
+**Code:** https://github.com/microsoft/SkillOpt
 
 > _Summary placeholder — fill in later._
 
@@ -26,6 +28,7 @@
 
 ## 3. SkillFlow: Scalable and Efficient Agent Skill Retrieval System
 
-**ArXiv:** https://arxiv.org/abs/2504.06188
+**ArXiv:** https://arxiv.org/abs/2504.06188  
+**Code:** https://github.com/IBPA/skill-flow
 
 > _Summary placeholder — fill in later._
