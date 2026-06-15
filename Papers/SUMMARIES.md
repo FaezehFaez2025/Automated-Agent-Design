@@ -30,7 +30,7 @@
 
 > **Benchmarks**  
 > - **SpreadsheetBench Verified**
-> - **WikiTableQuestions (WikiTQ)**
+> - **WikiTableQuestions**
 
 > _Summary placeholder — fill in later._
 
