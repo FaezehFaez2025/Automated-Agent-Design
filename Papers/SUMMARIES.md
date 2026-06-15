@@ -29,8 +29,8 @@
 > 4. **Parameter update** — An LLM-based patcher applies layer-aware edits to the skill package, producing the next version of the skill.
 
 > **Benchmarks**  
-> - **SpreadsheetBench Verified** — Primary in-domain benchmark for spreadsheet manipulation (cell- and sheet-level Excel tasks); hard accuracy on a fixed 120-task test split.
-> - **WikiTableQuestions (WikiTQ)** — Out-of-domain transfer benchmark for semi-structured table QA over Wikipedia tables; denotation accuracy on a fixed 70-example subset.
+> - **SpreadsheetBench Verified**
+> - **WikiTableQuestions (WikiTQ)**
 
 > _Summary placeholder — fill in later._
 
