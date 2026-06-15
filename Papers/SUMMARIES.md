@@ -13,6 +13,9 @@
 **ArXiv:** https://arxiv.org/abs/2605.27760  
 **Code:** https://github.com/wwwhy725/SkillGrad
 
+> **Background — What is an Agent Skill?**  
+> Agent skills provide a lightweight way to adapt LLM agents to specialized domains by storing reusable procedural knowledge in structured files. Rather than fine-tuning model weights, a skill is a portable artifact (e.g. a `SKILL.md` file) that an agent loads at inference time to gain domain-specific procedures, tool policies, and heuristics.
+
 > _Summary placeholder — fill in later._
 
 ---
