@@ -42,10 +42,8 @@
 > 4. **Parameter update** — An LLM-based patcher applies layer-aware edits to the skill package, producing the next version of the skill.
 >
 > <p align="center"><img src="images/SkillGrad1.png" alt="SkillGrad gradient-descent correspondence" width="380"></p>
-> <p align="center"><em>Table 1: Conceptual correspondence between gradient descent and SkillGrad.</em></p>
 >
 > ![SkillGrad overview](images/SkillGrad2.png)  
-> *Figure 1: Overview of SkillGrad.*
 
 
 > **Benchmarks**  
