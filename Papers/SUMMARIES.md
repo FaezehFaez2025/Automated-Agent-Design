@@ -45,8 +45,6 @@
 > - **SpreadsheetBench Verified**
 > - **WikiTableQuestions**
 
-> _Summary placeholder — fill in later._
-
 ---
 
 ## 2. SkillOpt: Executive Strategy for Self-Evolving Agent Skills
