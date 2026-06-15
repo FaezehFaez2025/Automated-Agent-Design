@@ -36,10 +36,16 @@
 > **This work**  
 > SkillGrad is a gradient descent-inspired framework for optimizing agent skills. It treats the skill package as a structured parameter and optimizes it in a gradient-descent-like loop:
 >
+> ![SkillGrad overview](images/SkillGrad2.png)  
+> *Figure 1: Overview of SkillGrad.*
+>
 > 1. **Loss evidence** — Task executions produce trajectory-level outcomes that serve as loss signals.
 > 2. **Text-based gradients** — Automatic diagnoses convert that evidence into correction directions (analogous to per-example gradients).
 > 3. **Momentum** — A momentum agent accumulates recurring diagnostic patterns into a persistent memory overlay, stabilizing optimization across iterations.
 > 4. **Parameter update** — An LLM-based patcher applies layer-aware edits to the skill package, producing the next version of the skill.
+>
+> ![SkillGrad gradient-descent correspondence](images/SkillGrad1.png)  
+> *Table 1: Conceptual correspondence between gradient descent and SkillGrad.*
 
 > **Benchmarks**  
 > - **SpreadsheetBench Verified**
