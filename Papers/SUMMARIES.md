@@ -67,14 +67,13 @@
 > > - **SpreadsheetBench**
 > > - **OfficeQA**
 > > - **DocVQA**
-> > - **LiveMathematicianBench** (LiveMath)
+> > - **LiveMathematicianBench**
 > > - **ALFWorld**
 >
 > > **Execution harnesses**
 > > - **Direct chat**
 > > - **Codex**
 > > - **Claude Code**  
-> > *(ALFWorld is evaluated only under direct chat.)*
 >
 > > **Target models**
 > > - **GPT-5.5**
