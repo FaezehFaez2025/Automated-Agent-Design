@@ -57,6 +57,34 @@
 **ArXiv:** https://arxiv.org/abs/2605.23904  
 **Code:** https://github.com/microsoft/SkillOpt
 
+> **Background**  
+> - **Harness** — In this paper, a harness is the execution environment that runs the frozen target model on tasks. The paper uses three harnesses: direct chat, Codex, and Claude Code.
+
+> **Evaluation**
+>
+> **Benchmarks**
+> - **SearchQA**
+> - **SpreadsheetBench**
+> - **OfficeQA**
+> - **DocVQA**
+> - **LiveMathematicianBench** (LiveMath)
+> - **ALFWorld**
+>
+> **Execution harnesses**
+> - **Direct chat**
+> - **Codex**
+> - **Claude Code**  
+> *(ALFWorld is evaluated only under direct chat.)*
+>
+> **Target models**
+> - **GPT-5.5**
+> - **GPT-5.4**
+> - **GPT-5.4-mini**
+> - **GPT-5.4-nano**
+> - **GPT-5.2**
+> - **Qwen3.5-4B**
+> - **Qwen3.6-35B-A3B**
+
 > _Summary placeholder — fill in later._
 
 ---
