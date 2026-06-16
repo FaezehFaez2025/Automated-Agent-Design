@@ -59,6 +59,120 @@
 
 > **Background**  
 > - **Harness** — In this paper, a harness is the execution environment that runs the frozen target model on tasks. The paper uses three harnesses: direct chat, Codex, and Claude Code.
+>
+> <details>
+> <summary><strong>More on harnesses</strong></summary>
+>
+> **1. Direct Chat Harness**
+>
+> This is the simplest harness.
+>
+> Imagine opening ChatGPT and typing:
+>
+> ```
+> User: Solve this math problem.
+> ```
+>
+> The model receives:
+>
+> ```
+> [System Prompt]
+> You are a helpful assistant.
+>
+> [Skill]
+> Break the problem into steps.
+> Verify calculations before answering.
+>
+> [User]
+> Solve this math problem.
+> ```
+>
+> Then the model answers once.
+>
+> **Workflow**
+>
+> ```
+> User Question
+>       ↓
+>    LLM
+>       ↓
+>  Final Answer
+> ```
+>
+> No tools. No coding environment. No file system. No iterative execution.
+>
+> This is what they call **Direct Chat**.
+>
+> **2. Claude Code Harness**
+>
+> Claude Code is much closer to an autonomous coding agent.
+>
+> Suppose the task is:
+>
+> ```
+> Find the bug in this repository and fix it.
+> ```
+>
+> The harness lets the model do things such as:
+>
+> ```
+> ls
+> cat file.py
+> grep
+> edit file.py
+> run tests
+> ```
+>
+> The interaction becomes:
+>
+> ```
+> User
+>  ↓
+> Claude Code Harness
+>  ↓
+> LLM decides next action
+>  ↓
+> Run command
+>  ↓
+> Observe result
+>  ↓
+> LLM decides next action
+>  ↓
+> ...
+> ```
+>
+> **Example:**
+>
+> ```
+> Thought:
+> I should inspect the repository.
+>
+> Action:
+> ls
+>
+> Observation:
+> src/
+> tests/
+>
+> Thought:
+> Open the failing file.
+>
+> Action:
+> cat src/model.py
+> ```
+>
+> and so on.
+>
+> The model is still frozen.
+>
+> The harness provides:
+>
+> - terminal access
+> - file editing
+> - execution environment
+> - looping
+>
+> </details>
 
 > **Evaluation**
 >
