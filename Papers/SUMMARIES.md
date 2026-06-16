@@ -58,6 +58,7 @@
 **Code:** https://github.com/microsoft/SkillOpt
 
 > **Background**  
+> - **Skill** — A skill is a portable natural-language artifact that packages procedures, domain heuristics, tool policies, output constraints, and failure modes, letting a frozen agent adapt through external text.
 > - **Harness** — In this paper, a harness is the execution environment that runs the frozen target model on tasks. The paper uses three harnesses: direct chat, Codex, and Claude Code.
 >
 >   <details>
