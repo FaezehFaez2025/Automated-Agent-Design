@@ -62,28 +62,28 @@
 
 > **Evaluation**
 >
-> **Benchmarks**
-> - **SearchQA**
-> - **SpreadsheetBench**
-> - **OfficeQA**
-> - **DocVQA**
-> - **LiveMathematicianBench** (LiveMath)
-> - **ALFWorld**
+> > **Benchmarks**
+> > - **SearchQA**
+> > - **SpreadsheetBench**
+> > - **OfficeQA**
+> > - **DocVQA**
+> > - **LiveMathematicianBench** (LiveMath)
+> > - **ALFWorld**
 >
-> **Execution harnesses**
-> - **Direct chat**
-> - **Codex**
-> - **Claude Code**  
-> *(ALFWorld is evaluated only under direct chat.)*
+> > **Execution harnesses**
+> > - **Direct chat**
+> > - **Codex**
+> > - **Claude Code**  
+> > *(ALFWorld is evaluated only under direct chat.)*
 >
-> **Target models**
-> - **GPT-5.5**
-> - **GPT-5.4**
-> - **GPT-5.4-mini**
-> - **GPT-5.4-nano**
-> - **GPT-5.2**
-> - **Qwen3.5-4B**
-> - **Qwen3.6-35B-A3B**
+> > **Target models**
+> > - **GPT-5.5**
+> > - **GPT-5.4**
+> > - **GPT-5.4-mini**
+> > - **GPT-5.4-nano**
+> > - **GPT-5.2**
+> > - **Qwen3.5-4B**
+> > - **Qwen3.6-35B-A3B**
 
 > _Summary placeholder — fill in later._
 
