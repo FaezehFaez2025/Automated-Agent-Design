@@ -85,8 +85,6 @@
 > > - **Qwen3.5-4B**
 > > - **Qwen3.6-35B-A3B**
 
-> _Summary placeholder — fill in later._
-
 ---
 
 ## 3. SkillFlow: Scalable and Efficient Agent Skill Retrieval System
