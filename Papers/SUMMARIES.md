@@ -178,6 +178,7 @@
 > **This work**  
 > - The skill should be trained as the external state of a frozen agent.
 > - **SkillOpt** is a controllable text-space optimizer for agent skills.
+> - **SkillOpt** is harness-agnostic (the same optimizer can work across different execution environments, such as direct chat, Codex, and Claude Code).
 >
 > > **Terminology**
 > > - **Target model** — The frozen LLM that actually runs tasks with the skill; SkillOpt adapts this agent by editing the skill, not the model weights.
