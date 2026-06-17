@@ -246,3 +246,7 @@
 >
 > ![SkillFlow pipeline](images/SkillFlow.png)
 
+> **Benchmarks**  
+> - **SkillsBench**
+> - **Terminal-Bench**
+
