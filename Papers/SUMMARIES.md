@@ -229,4 +229,18 @@
 **ArXiv:** https://arxiv.org/abs/2504.06188  
 **Code:** https://github.com/IBPA/skill-flow
 
-> _Summary placeholder — fill in later._
+> **Motivation**  
+> Agents must load skills into their context at inference time, and equipping them with too many skills degrades both accuracy and efficiency. As a result, agents need a way to selectively retrieve only the most relevant skills from a large library.
+
+> **This work**  
+> **SkillFlow** is a multi-stage retrieval pipeline designed for agent skill discovery. It frames skill acquisition as an information retrieval problem over a corpus of ~36K community-contributed `SKILL.md` definitions indexed from GitHub.
+>
+> Its stages:
+>
+> 1. **Bi-encoder retriever**
+> 2. **Shallow cross-encoder reranker**
+> 3. **Deep cross-encoder reranker**
+> 4. **LLM-based selector**
+>
+> The paper also shows that the primary factor limiting skill-augmented agents is not retrieval itself, but the quality and coverage of the underlying skill library.
+
