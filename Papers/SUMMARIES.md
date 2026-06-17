@@ -187,6 +187,8 @@
 > - At deployment, the agent uses only the learned skill and the frozen target model—no separate optimizer model is called.
 >
 > ![SkillOpt overview](images/SkillOpt1.png)
+>
+> ![SkillOpt pipeline](images/SkillOpt2.png)
 
 > **Evaluation**
 >
