@@ -239,7 +239,7 @@
 >
 > 1. **Bi-encoder retriever** — A bi-encoder independently encodes the task and the skill into embeddings in a shared latent space, then computes a similarity score (e.g., cosine similarity) between the embeddings as an estimate of the skill's relevance to the task.
 > 2. **Shallow cross-encoder reranker** — The shallow reranker truncates each candidate skill to $L_{\text{shallow}}$ tokens, concatenates it with the generated query, and feeds the pair to a cross-encoder that assigns a relevance score for reranking.
-> 3. **Deep cross-encoder reranker**
+> 3. **Deep cross-encoder reranker** — After the shallow reranking stage reduces the candidate set, a second, heavier cross-encoder reevaluates the remaining skills. Since the number of candidates is now much smaller, the model can process a much larger portion of each skill ($L_{\text{deep}} \gg L_{\text{shallow}}$), allowing a more thorough assessment of the relevance between the query and the skill and thus producing a more accurate ranking.
 > 4. **LLM-based selector**
 >
 > The paper also shows that the primary factor limiting skill-augmented agents is not retrieval itself, but the quality and coverage of the underlying skill library.
