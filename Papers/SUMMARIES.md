@@ -237,7 +237,7 @@
 >
 > Its stages:
 >
-> 1. **Bi-encoder retriever**
+> 1. **Bi-encoder retriever** — A bi-encoder independently encodes the task and the skill into embeddings in a shared latent space, then computes a similarity score (e.g., cosine similarity) between the embeddings as an estimate of the skill's relevance to the task.
 > 2. **Shallow cross-encoder reranker**
 > 3. **Deep cross-encoder reranker**
 > 4. **LLM-based selector**
