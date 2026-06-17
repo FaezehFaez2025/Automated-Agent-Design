@@ -175,6 +175,10 @@
 >
 >   </details>
 
+> **This work**  
+> - The skill should be trained as the external state of a frozen agent.
+> - **SkillOpt** is a controllable text-space optimizer for agent skills.
+
 > **Evaluation**
 >
 > > **Benchmarks**
