@@ -5,6 +5,7 @@
 1. [SkillGrad: Optimizing Agent Skills Like Gradient Descent](#1-skillgrad-optimizing-agent-skills-like-gradient-descent)
 2. [SkillOpt: Executive Strategy for Self-Evolving Agent Skills](#2-skillopt-executive-strategy-for-self-evolving-agent-skills)
 3. [SkillFlow: Scalable and Efficient Agent Skill Retrieval System](#3-skillflow-scalable-and-efficient-agent-skill-retrieval-system)
+4. [A<sup>2</sup>Flow: Automating Agentic Workflow Generation via Self-Adaptive Abstraction Operators](#4-a2flow-automating-agentic-workflow-generation-via-self-adaptive-abstraction-operators)
 
 ---
 
@@ -249,4 +250,13 @@
 > **Benchmarks**  
 > - **SkillsBench**
 > - **Terminal-Bench**
+
+---
+
+## 4. A<sup>2</sup>Flow: Automating Agentic Workflow Generation via Self-Adaptive Abstraction Operators
+
+**ArXiv:** https://arxiv.org/abs/2511.20693  
+**Code:** https://github.com/pandawei-ele/A2FLOW
+
+> _Summary placeholder — fill in later._
 
