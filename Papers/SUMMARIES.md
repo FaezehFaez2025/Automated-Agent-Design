@@ -238,7 +238,7 @@
 > Its stages:
 >
 > 1. **Bi-encoder retriever** — A bi-encoder independently encodes the task and the skill into embeddings in a shared latent space, then computes a similarity score (e.g., cosine similarity) between the embeddings as an estimate of the skill's relevance to the task.
-> 2. **Shallow cross-encoder reranker**
+> 2. **Shallow cross-encoder reranker** — The shallow reranker truncates each candidate skill to $L_{\text{shallow}}$ tokens, concatenates it with the generated query, and feeds the pair to a cross-encoder that assigns a relevance score for reranking.
 > 3. **Deep cross-encoder reranker**
 > 4. **LLM-based selector**
 >
