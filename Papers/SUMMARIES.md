@@ -179,6 +179,12 @@
 > - The skill should be trained as the external state of a frozen agent.
 > - **SkillOpt** is a controllable text-space optimizer for agent skills.
 >
+> > **Terminology**
+> > - **Target model** — The frozen LLM that actually runs tasks with the skill; SkillOpt adapts this agent by editing the skill, not the model weights.
+> > - **Frontier optimizer model** — A separate LLM used only during training to read rollouts and propose skill edits.
+>
+> - At deployment, the agent uses only the learned skill and the frozen target model—no separate optimizer model is called.
+>
 > ![SkillOpt overview](images/SkillOpt1.png)
 
 > **Evaluation**
