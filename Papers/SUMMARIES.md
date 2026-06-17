@@ -243,4 +243,6 @@
 > 4. **LLM-based selector**
 >
 > The paper also shows that the primary factor limiting skill-augmented agents is not retrieval itself, but the quality and coverage of the underlying skill library.
+>
+> ![SkillFlow pipeline](images/SkillFlow.png)
 
