@@ -211,6 +211,13 @@
 > > - **GPT-5.2**
 > > - **Qwen3.5-4B**
 > > - **Qwen3.6-35B-A3B**
+>
+> > **Baselines**
+> > - **No skill**
+> > - **Human skill**
+> > - **One-shot LLM skill**
+> > - **Skill evolution:** **Trace2Skill**, **EvoSkill**
+> > - **Prompt optimization:** **TextGrad**, **GEPA**
 
 ---
 
