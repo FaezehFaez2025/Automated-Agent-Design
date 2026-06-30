@@ -42,3 +42,21 @@ python utils/eval_status.py --summary results/runs/skillgrad_gpt-4.1/eval/eval_s
 |----------|---------|-------------|
 | `--summary` | `results/runs/skillgrad_gpt-5.4/eval/eval_summary.json` | Path to `eval_summary.json` |
 | `--status` | `passed` | Which group to print: `passed`, `failed`, or `retry` |
+
+---
+
+## Evaluation Metrics Reporter
+
+Reads `eval_summary.json` and prints a structured breakdown of all key metrics.
+
+**Script:** `eval_metrics.py`
+
+### Usage
+
+```bash
+# default run
+python utils/eval_metrics.py
+
+# point to a different run
+python utils/eval_metrics.py --summary results/runs/skillgrad_gpt-4.1/eval/eval_summary.json
+```
