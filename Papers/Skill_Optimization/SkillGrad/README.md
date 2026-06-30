@@ -41,6 +41,9 @@ assets/          figures referenced from the README
 ## Installation
 
 ```bash
+conda create -n skillgrad python=3.11 -y
+conda activate skillgrad
+
 pip install -r requirements.txt
 
 cp .env.example .env
