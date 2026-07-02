@@ -60,3 +60,54 @@ python utils/eval_metrics.py
 # point to a different run
 python utils/eval_metrics.py --summary results/runs/skillgrad_gpt-4.1/eval/eval_summary.json
 ```
+
+---
+
+## Skill Evolution Visualizer
+
+Embeds every saved version of the skill (`SKILL.md.iter_0` … `SKILL.md.iter_N`,
+plus `final_skill/xlsx/SKILL.md`) with a sentence-transformer, projects the
+embeddings to 2D with PCA, and plots the trajectory as a sequence of connected
+points — one point per skill version, one arrow per patch between consecutive
+versions — so you can see how much (and in what direction) each training
+iteration moved the skill.
+
+**Script:** `visualize_skill_evolution.py`
+
+### Requirements
+
+```bash
+pip install sentence-transformers scikit-learn matplotlib
+```
+
+### Usage
+
+```bash
+# default run
+python utils/visualize_skill_evolution.py
+
+# specify a run id
+python utils/visualize_skill_evolution.py --run-id skillgrad_gpt-4.1
+
+# use a different embedding model
+python utils/visualize_skill_evolution.py --embedder all-mpnet-base-v2
+```
+
+### Arguments
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--run-id` | `skillgrad_gpt-5.4` | Run folder under `results/runs/<run-id>/train/` |
+| `--embedder` | `all-MiniLM-L6-v2` | SentenceTransformer model name used to embed each `SKILL.md` version |
+
+### Input
+
+Reads from `results/runs/<run-id>/train/`:
+- `SKILL.md.iter_0` (seed skill), `SKILL.md.iter_1`, `SKILL.md.iter_2`, … (one per training iteration)
+- `final_skill/xlsx/SKILL.md` (final patched skill, if present)
+
+Requires at least 2 versions to plot; raises an error otherwise.
+
+### Output
+
+Saves a PNG to `results/skill_evolution.png`:
