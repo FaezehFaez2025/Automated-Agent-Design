@@ -39,6 +39,7 @@ from data.split import (
     load_split,
 )
 from pipeline.diagnoser import assemble_diagnoses, classify_batch, run_diagnose
+from pipeline.foil import FoilIndex, find_foil
 from pipeline.execution import (
     _write_workspace,
     load_dataset,
@@ -82,6 +83,8 @@ async def run_training(
     concurrency: int = 4,
     interactive: bool = False,
     start_iteration: int = 1,
+    use_foil: bool = False,
+    success_ids: list[str] | None = None,
 ):
     """Run the SkillGrad training loop.
 
@@ -105,6 +108,22 @@ async def run_training(
     cost_tracker = CostTracker(model)
     semaphore = asyncio.Semaphore(concurrency)
     openai_client = get_client_for_model(model)
+
+    # ── Foil index (built once before the training loop) ──────────────────
+    foil_index: FoilIndex | None = None
+    if use_foil and success_ids:
+        import openai as _openai
+        async_client = _openai.AsyncOpenAI()
+        id_to_instruction = {
+            str(s["id"]): s["instruction"] for s in dataset
+        }
+        foil_index = FoilIndex(
+            candidate_ids=success_ids,
+            id_to_instruction=id_to_instruction,
+            async_openai_client=async_client,
+        )
+        await foil_index.build()
+        print(f"  Foil index ready: {len(foil_index.candidate_ids)} candidates")
 
     # Map task IDs to dataset indices
     id_to_idx = {str(s["id"]): i for i, s in enumerate(dataset)}
@@ -264,12 +283,27 @@ async def run_training(
         t_stage = time.time()
         cost_before_stage = _cost_snapshot(cost_tracker)
 
+        # Find foils for failed tasks when foil mode is active
+        foil_map: dict[str, dict | None] = {}
+        if foil_index is not None and failed:
+            print(f"  [foil] Finding foils for {len(failed)} failed task(s) ...")
+            foil_tasks = [
+                find_foil(a, foil_index, dataset, id_to_idx, base_trajectories_dir)
+                for a in failed
+            ]
+            foil_results = await asyncio.gather(*foil_tasks)
+            for a, foil_result in zip(failed, foil_results):
+                foil_map[a["id"]] = foil_result
+            n_foils = sum(1 for v in foil_map.values() if v is not None)
+            print(f"  [foil] {n_foils}/{len(failed)} failed tasks got a foil")
+
         diag_tasks = []
         for a in failed:
             diag_tasks.append(run_diagnose(
                 a, "failure", iter_dir, skills_dir,
                 base_trajectories_dir, model, project_root,
                 semaphore, cost_tracker,
+                foil_assessment=foil_map.get(a["id"]),
             ))
         for a in contrastive:
             diag_tasks.append(run_diagnose(
@@ -576,6 +610,10 @@ def main() -> None:
     parser.add_argument("--concurrency", type=int, default=4)
     parser.add_argument("--interactive", action="store_true")
     parser.add_argument("--start-iteration", type=int, default=1)
+    parser.add_argument(
+        "--foil", action="store_true",
+        help="Enable Foil: pair each failed task with a similar S0-passing task.",
+    )
     args = parser.parse_args()
 
     results_root = Path(args.results_root)
@@ -618,8 +656,13 @@ def main() -> None:
         failure_ids, success_ids = identify_failures(base_traj_dir, split["evolution_ids"])
         _write_workspace(failures_path, {"failure_ids": failure_ids, "success_ids": success_ids})
     else:
-        failure_ids = json.loads(failures_path.read_text(encoding="utf-8"))["failure_ids"]
-    print(f"Loaded {len(failure_ids)} failure IDs from {base_traj_dir}")
+        stored = json.loads(failures_path.read_text(encoding="utf-8"))
+        failure_ids = stored["failure_ids"]
+        success_ids = stored.get("success_ids", [])
+    print(
+        f"Loaded {len(failure_ids)} failure IDs and "
+        f"{len(success_ids)} success IDs from {base_traj_dir}"
+    )
 
     # ── Build training set (training-seed varies; selects 40 of failures) ─
     if args.batch_schedule == "fixed-updates":
@@ -667,6 +710,7 @@ def main() -> None:
         "method": args.method,
         "model": args.model,
         "config_tag": args.config_tag,
+        "foil": args.foil,
         "seeds": {
             "master_seed": args.master_seed,
             "heldout_seed": args.heldout_seed,
@@ -716,6 +760,8 @@ def main() -> None:
             concurrency=args.concurrency,
             interactive=args.interactive,
             start_iteration=args.start_iteration,
+            use_foil=args.foil,
+            success_ids=success_ids if args.foil else None,
         ))
         final_status = "completed"
     except Exception as exc:
