@@ -23,6 +23,7 @@ from pipeline.execution import _write_workspace
 from prompts.diagnoser import (
     CONTRASTIVE_DIAGNOSER_PROMPT,
     FAILURE_DIAGNOSER_PROMPT,
+    FOIL_DIAGNOSER_PROMPT,
 )
 from runners.cost_tracker import CostTracker
 from runners.model_settings import get_model_settings
@@ -99,6 +100,35 @@ def _build_contrastive_diagnosis_query(
     )
 
 
+def _build_foil_diagnosis_query(
+    failed_assessment: dict,
+    failed_trace_path: Path,
+    foil_assessment: dict,
+    skill_dir: Path,
+) -> str:
+    """Build the paired query for the foil (cross-task contrastive) diagnoser."""
+    f_desc = failed_assessment["example"]["instruction"]
+    f_acc = failed_assessment["accuracy"]
+    f_cell_comp = failed_assessment["cell_comparison"]
+
+    j_desc = foil_assessment["example"]["instruction"]
+    j_trace = foil_assessment.get("merged_trace_path", "(trace not available)")
+
+    return (
+        f"## Task f (failed)\n{f_desc}\n\n"
+        f"## Task f — Cell Comparison (expected vs actual)\n"
+        f"Accuracy: {f_acc['match_count']}/{f_acc['total_count']} "
+        f"({f_acc['accuracy']:.1%})\n\n"
+        f"{f_cell_comp}\n\n"
+        f"## Task j* (passed under the initial skill)\n{j_desc}\n\n"
+        f"## Files (read with read_file as needed)\n"
+        f"- Task f execution trace: {failed_trace_path}\n"
+        f"- Task f agent output: {failed_assessment['task_workdir']}/output.xlsx\n"
+        f"- Task j* execution trace: {j_trace}\n"
+        f"- Skill directory: {skill_dir}\n"
+    )
+
+
 def _extract_diagnosis(agent_output: str) -> str:
     """Extract the <diagnosis> block from agent output."""
     match = re.search(r"<diagnosis>(.*?)</diagnosis>", agent_output, re.DOTALL)
@@ -109,7 +139,7 @@ def _extract_diagnosis(agent_output: str) -> str:
 
 async def run_diagnose(
     assessment: dict,
-    diagnosis_type: str,  # "failure" or "contrastive"
+    diagnosis_type: str,  # "failure", "contrastive", or "foil"
     iter_dir: Path,
     skills_dir: Path,
     base_trajectories_dir: Path,
@@ -117,6 +147,7 @@ async def run_diagnose(
     project_root: Path,
     semaphore: asyncio.Semaphore,
     cost_tracker: CostTracker,
+    foil_assessment: dict | None = None,
 ) -> dict:
     """Run diagnosis for one seed."""
     async with semaphore:
@@ -130,7 +161,16 @@ async def run_diagnose(
             save_merged_trace(raw_trace, merged_trace)
 
         # Select prompt and build query
-        if diagnosis_type == "failure":
+        if diagnosis_type == "failure" and foil_assessment is not None:
+            system_prompt = FOIL_DIAGNOSER_PROMPT
+            query = _build_foil_diagnosis_query(
+                assessment, merged_trace, foil_assessment, skills_dir / "xlsx",
+            )
+            print("########################################################")
+            print(query)
+            print("########################################################")
+            diagnosis_type = "foil"
+        elif diagnosis_type == "failure":
             system_prompt = FAILURE_DIAGNOSER_PROMPT
             query = _build_failure_diagnosis_query(
                 assessment, merged_trace, skills_dir / "xlsx",
@@ -214,6 +254,9 @@ def assemble_diagnoses(
         if dtype == "failure":
             acc_str = f"{acc.get('accuracy', 0):.1%}" if acc else "N/A"
             header = f"## Task {ex_id} (failed, accuracy: {acc_str})"
+        elif dtype == "foil":
+            acc_str = f"{acc.get('accuracy', 0):.1%}" if acc else "N/A"
+            header = f"## Task {ex_id} (failed+foil, accuracy: {acc_str})"
         else:
             header = f"## Task {ex_id} (previously failed, now succeeds)"
 
