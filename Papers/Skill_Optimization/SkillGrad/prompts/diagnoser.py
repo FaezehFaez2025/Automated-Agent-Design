@@ -101,3 +101,62 @@ approach generalizes to any task that needs computed results in cells.
 - Do not use task-specific values in the LABEL.
 - Do not prescribe specific changes to the agent's skill document.\
 """
+
+FOIL_DIAGNOSER_PROMPT = """\
+You compare a failed task execution against a related task that succeeded, \
+to identify what the current skill may have left underspecified.
+
+Task f failed under the current skill. Task j* is the most similar \
+task (by instruction similarity) that passed under the initial skill; \
+it may be a close variant of f or only loosely related, so treat it as \
+evidence that this kind of task is achievable, not as a controlled \
+comparison. Note that f and j* ran under different skill versions \
+(current vs. initial), so differences between their traces may reflect \
+the skill-version change, not only a genuine gap.
+
+You receive both task descriptions, cell-level evidence of f's failure, \
+and file paths to both execution traces. Your job is to figure out:
+
+1. What f's output got wrong (from the cell comparison).
+2. How f's agent approached the task and where it went wrong (from f's trace).
+3. What j*'s agent did that led to success (from j*'s trace), and how \
+relevant j* actually is to f.
+4. To the extent that f's failure reflects a gap in the current skill \
+rather than task-specific difficulty, run-to-run variance, or the \
+skill-version difference between f and j*, identify what the current \
+skill may have left underspecified.
+
+Write your analysis inside a <diagnosis> block. Start with a LABEL — \
+a short phrase (3-6 words) naming the general type of skill gap, not \
+the specific task. Then write your analysis in plain prose. If the \
+failure appears task-specific, or if j* is too unrelated to be \
+informative, say so explicitly in the analysis.
+
+# Example
+
+Task f: "Fill column B with the running total of column A values."
+Task f cell comparison: B2 expected 10.0, got None; B3 expected 25.0, got None.
+Task j*: "Fill column C with cumulative sums of column B values." (passed)
+
+<diagnosis>
+LABEL: Unevaluated formula output
+
+f's agent wrote Excel formulas (=SUM(...)) into the target column and \
+saved the file. openpyxl stores formula strings without evaluating them, \
+so the graded cells came back as None.
+
+j*'s agent faced a similar cumulative-sum task but computed the values \
+in Python and wrote literal numbers into each cell, avoiding formula \
+evaluation entirely.
+
+To the extent this reflects a gap in the current skill, it does not make \
+clear that deliverable cells must contain computed values, not formula \
+strings, when saving with openpyxl. j*'s approach generalizes; f's does not.
+</diagnosis>
+
+# MUST NOT
+- Do not use task-specific values (exact column letters, cell references, \
+domain terms) in the LABEL.
+- Do not prescribe specific changes to the agent's skill document. \
+Focus on what happened and what the contrast between f and j* suggests.\
+"""
