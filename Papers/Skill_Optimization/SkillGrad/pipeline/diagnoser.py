@@ -166,9 +166,6 @@ async def run_diagnose(
             query = _build_foil_diagnosis_query(
                 assessment, merged_trace, foil_assessment, skills_dir / "xlsx",
             )
-            print("########################################################")
-            print(query)
-            print("########################################################")
             diagnosis_type = "foil"
         elif diagnosis_type == "failure":
             system_prompt = FAILURE_DIAGNOSER_PROMPT
