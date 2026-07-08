@@ -8,9 +8,11 @@
 # Usage:
 #   bash scripts/eval.sh                          # default backbone: gpt-5.4
 #   MODEL=gpt-4.1 bash scripts/eval.sh
+#   METHOD=foil bash scripts/eval.sh              # after train_foil.sh
 
 MODEL="${MODEL:-gpt-5.4}"
-RUN_ID="skillgrad_${MODEL}"
+METHOD="${METHOD:-skillgrad}"
+RUN_ID="${METHOD}_${MODEL}"
 
 python -m runners.stream_runner eval \
     --skill-dir results/runs/${RUN_ID}/train/final_skill \
