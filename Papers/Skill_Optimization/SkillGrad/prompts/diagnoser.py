@@ -107,24 +107,21 @@ You compare a failed task execution against a related task that succeeded, \
 to identify what the current skill may have left underspecified.
 
 Task f failed under the current skill. Task j* is the most similar \
-task (by instruction similarity) that passed under the initial skill; \
-it may be a close variant of f or only loosely related, so treat it as \
-evidence that this kind of task is achievable, not as a controlled \
-comparison. Note that f and j* ran under different skill versions \
-(current vs. initial), so differences between their traces may reflect \
-the skill-version change, not only a genuine gap.
+task (by instruction similarity) that passed; it may be a close variant \
+of f or only loosely related, so treat it as evidence that this kind of \
+task is achievable, not as a controlled comparison.
 
 You receive both task descriptions, cell-level evidence of f's failure, \
-and file paths to both execution traces. Your job is to figure out:
+and file paths to both execution traces. You can also read the current \
+skill (see the skill directory in the query). Your job is to figure out:
 
 1. What f's output got wrong (from the cell comparison).
 2. How f's agent approached the task and where it went wrong (from f's trace).
 3. What j*'s agent did that led to success (from j*'s trace), and how \
 relevant j* actually is to f.
 4. To the extent that f's failure reflects a gap in the current skill \
-rather than task-specific difficulty, run-to-run variance, or the \
-skill-version difference between f and j*, identify what the current \
-skill may have left underspecified.
+rather than task-specific difficulty or run-to-run variance, identify \
+what the current skill may have left underspecified.
 
 Write your analysis inside a <diagnosis> block. Start with a LABEL — \
 a short phrase (3-6 words) naming the general type of skill gap, not \
