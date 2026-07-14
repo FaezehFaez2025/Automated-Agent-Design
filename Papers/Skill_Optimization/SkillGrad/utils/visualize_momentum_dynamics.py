@@ -65,3 +65,12 @@ def mean_std(values: list[float]) -> tuple[float, float]:
     return mean, math.sqrt(var)
 
 
+def method_name(run_id: str) -> str:
+    rid = run_id.lower()
+    if rid.startswith("foil") or "foil" in rid.split("_")[0]:
+        return "Foil"
+    if "skillgrad" in rid:
+        return "SkillGrad"
+    return run_id
+
+
