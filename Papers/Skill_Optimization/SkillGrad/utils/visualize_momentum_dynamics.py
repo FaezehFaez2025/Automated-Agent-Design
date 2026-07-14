@@ -92,6 +92,117 @@ def aggregate_runs(
 
 
 # ---------------------------------------------------------------------------
+# 2. Plotting only
+# ---------------------------------------------------------------------------
+
+def plot_momentum_dynamics(
+    iterations: list[int],
+    mean_cum: list[float],
+    std_cum: list[float],
+    mean_new: list[float],
+    *,
+    method: str,
+    n_seeds: int,
+    out: Path,
+) -> None:
+    """Draw the dual-axis momentum chart and save it to ``out``."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
+
+    purple = "#7b6bb0"
+    purple_band = "#b8a9d4"
+    red = "#f4a3a0"
+
+    fig, ax_cum = plt.subplots(figsize=(8.0, 4.2))
+    ax_new = ax_cum.twinx()
+    xs = list(range(len(iterations)))
+
+    # Red bars: new patterns (right axis).
+    ax_new.bar(
+        xs, mean_new, width=0.55, color=red, edgecolor="#de7068",
+        alpha=0.85, label="New patterns", zorder=1,
+    )
+
+    # Purple band around the cumulative line.
+    # ≥2 seeds → ±1 std; 1 seed → thin illustrative band (layout only).
+    if n_seeds > 1:
+        lo = [m - s for m, s in zip(mean_cum, std_cum)]
+        hi = [m + s for m, s in zip(mean_cum, std_cum)]
+        band_note = "±1 std across seeds"
+    else:
+        half = 0.45
+        lo = [max(0.0, m - half) for m in mean_cum]
+        hi = [m + half for m in mean_cum]
+        band_note = "illustrative band (1 seed)"
+        print(
+            "  Note: shaded band is illustrative with a single seed. "
+            "Pass multiple --runs (paper: 3 seeds) for a real ±std band."
+        )
+
+    ax_cum.fill_between(
+        xs, lo, hi, color=purple_band, alpha=0.45, zorder=2, linewidth=0,
+    )
+
+    # Purple line: cumulative patterns (left axis).
+    ax_cum.plot(
+        xs, mean_cum, color=purple, lw=2.2, zorder=3,
+        marker="o", markersize=7,
+        markerfacecolor="white", markeredgecolor=purple, markeredgewidth=1.8,
+        label="Cumulative patterns",
+    )
+
+    ax_cum.set_xlabel("Iteration")
+    ax_cum.set_ylabel("Cumulative patterns", color=purple)
+    ax_new.set_ylabel("New patterns", color="#c45c55")
+    ax_cum.tick_params(axis="y", colors=purple)
+    ax_new.tick_params(axis="y", colors="#c45c55")
+    ax_cum.set_xticks(xs)
+    ax_cum.set_xticklabels([str(it) for it in iterations])
+
+    # Use the SAME numeric y-limits on both axes so a bar of height 3
+    # lines up with "3" on the left axis too (avoids dual-axis optical illusion).
+    y_max = max(
+        max(hi) if hi else 0.0,
+        max(mean_new) if mean_new else 0.0,
+        1.0,
+    ) * 1.25
+    ax_cum.set_ylim(0, y_max)
+    ax_new.set_ylim(0, y_max)
+
+    # Label each bar with its count so the value is unambiguous.
+    for x, val in zip(xs, mean_new):
+        if val > 0:
+            ax_new.text(
+                x, val + y_max * 0.02, f"{val:g}",
+                ha="center", va="bottom", fontsize=8, color="#c45c55",
+            )
+
+    ax_cum.set_title(f"Momentum state dynamics — {method}")
+    ax_cum.grid(True, axis="y", ls=":", alpha=0.35)
+    ax_cum.spines["top"].set_visible(False)
+    ax_new.spines["top"].set_visible(False)
+
+    h1, l1 = ax_cum.get_legend_handles_labels()
+    h2, l2 = ax_new.get_legend_handles_labels()
+    band_proxy = Patch(
+        facecolor=purple_band, alpha=0.45, edgecolor="none",
+        label=f"Band ({band_note})",
+    )
+    ax_cum.legend(
+        h1 + h2 + [band_proxy],
+        l1 + l2 + [f"Band ({band_note})"],
+        frameon=False, loc="upper left",
+    )
+
+    fig.tight_layout()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=160, bbox_inches="tight")
+    print(f"  Saved → {out}")
+
+
+# ---------------------------------------------------------------------------
 # 3. CLI: load data, then call the plotter
 # ---------------------------------------------------------------------------
 
