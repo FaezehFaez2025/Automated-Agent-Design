@@ -74,3 +74,20 @@ def method_name(run_id: str) -> str:
     return run_id
 
 
+def aggregate_runs(
+    per_run: list[dict[int, tuple[int, int]]],
+) -> tuple[list[int], list[float], list[float], list[float]]:
+    """Average cumulative / new counts across seeds for each iteration."""
+    iterations = sorted({it for d in per_run for it in d})
+    mean_cum, std_cum, mean_new = [], [], []
+    for it in iterations:
+        cums = [float(d[it][0]) for d in per_run if it in d]
+        news = [float(d[it][1]) for d in per_run if it in d]
+        mc, sc = mean_std(cums)
+        mn, _ = mean_std(news)
+        mean_cum.append(mc)
+        std_cum.append(sc)
+        mean_new.append(mn)
+    return iterations, mean_cum, std_cum, mean_new
+
+
