@@ -29,3 +29,29 @@ def parse_pattern_slugs(memory_path: Path) -> set[str]:
     return set(PATTERN_RE.findall(text))
 
 
+def dynamics_for_run(run_dir: Path) -> dict[int, tuple[int, int]]:
+    """
+    {iteration: (cumulative, n_new)} for one run.
+
+    Cumulative = |union of all pattern ids seen up to this iteration|
+    (never decreases). New = ids that appear for the first time here.
+    """
+    train = run_dir / "train"
+    iter_dirs = sorted(
+        (p for p in train.glob("iter_*") if (p / "momentum_memory.md").exists()),
+        key=lambda p: int(p.name.split("_")[1]),
+    )
+    if not iter_dirs:
+        return {}
+
+    ever_seen: set[str] = set()
+    out: dict[int, tuple[int, int]] = {}
+    for d in iter_dirs:
+        iteration = int(d.name.split("_")[1])
+        slugs = parse_pattern_slugs(d / "momentum_memory.md")
+        new = slugs - ever_seen
+        ever_seen |= slugs
+        out[iteration] = (len(ever_seen), len(new))
+    return out
+
+
