@@ -55,3 +55,13 @@ def dynamics_for_run(run_dir: Path) -> dict[int, tuple[int, int]]:
     return out
 
 
+def mean_std(values: list[float]) -> tuple[float, float]:
+    if not values:
+        return float("nan"), float("nan")
+    mean = sum(values) / len(values)
+    if len(values) == 1:
+        return mean, 0.0
+    var = sum((v - mean) ** 2 for v in values) / len(values)
+    return mean, math.sqrt(var)
+
+
