@@ -110,4 +110,39 @@ Requires at least 2 versions to plot; raises an error otherwise.
 
 ### Output
 
-Saves a PNG to `results/skill_evolution.png`:
+Saves a PNG to `results/skill_evolution.png`.
+
+---
+
+## Momentum Dynamics Visualizer
+
+Plots cumulative / new pattern counts from `train/iter_*/momentum_memory.md`
+(SkillGrad paper Fig. 5 style). Pass one or more folder names under
+`results/runs/`; multiple folders are averaged (shaded ±std band).
+
+**Script:** `visualize_momentum_dynamics.py`
+
+### Usage
+
+```bash
+python3 utils/visualize_momentum_dynamics.py \
+  --runs skillgrad_gpt-5.4 \
+  --out results/momentum_dynamics_skillgrad.png
+
+python3 utils/visualize_momentum_dynamics.py \
+  --runs foil_gpt-5.4 \
+  --out results/momentum_dynamics_foil.png
+
+# average several seeds
+python3 utils/visualize_momentum_dynamics.py \
+  --runs seed_a seed_b seed_c \
+  --out results/momentum_dynamics.png
+```
+
+### Arguments
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--runs` | (required) | Folder name(s) under `results/runs/` |
+| `--runs-root` | `results/runs` | Parent directory of run folders |
+| `--out` | `results/momentum_dynamics.png` | Output PNG path |
