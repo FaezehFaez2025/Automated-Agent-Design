@@ -91,3 +91,63 @@ def aggregate_runs(
     return iterations, mean_cum, std_cum, mean_new
 
 
+# ---------------------------------------------------------------------------
+# 3. CLI: load data, then call the plotter
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Plot momentum pattern dynamics.")
+    parser.add_argument(
+        "--runs-root",
+        type=Path,
+        default=Path("results/runs"),
+        help="Directory that contains run folders (default: results/runs).",
+    )
+    parser.add_argument("--runs", nargs="+", help="Run folder names under results/runs/.")
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=Path("results/momentum_dynamics.png"),
+    )
+    args = parser.parse_args()
+
+    if not args.runs:
+        raise SystemExit("Pass at least one folder with --runs FOLDER [FOLDER ...]")
+
+    missing = [name for name in args.runs if not (args.runs_root / name).is_dir()]
+    if missing:
+        raise SystemExit(f"Unknown run folder(s) under {args.runs_root}: {missing}")
+
+    # --- load each requested folder ---
+    per_run: list[dict[int, tuple[int, int]]] = []
+    used_ids: list[str] = []
+    for folder in args.runs:
+        dyn = dynamics_for_run(args.runs_root / folder)
+        if not dyn:
+            print(f"  [skip] {folder}: no momentum_memory.md found")
+            continue
+        print(f"  {method_name(folder)} ({folder}):")
+        for it in sorted(dyn):
+            cum, new = dyn[it]
+            print(f"    iter {it:>2}: cumulative={cum}  new={new}")
+        per_run.append(dyn)
+        used_ids.append(folder)
+
+    if not per_run:
+        raise SystemExit("No usable runs (none had momentum_memory.md).")
+
+    # --- aggregate across the selected folders ---
+    method = " / ".join(dict.fromkeys(method_name(r) for r in used_ids))
+    iterations, mean_cum, std_cum, mean_new = aggregate_runs(per_run)
+
+    # --- plot ---
+    plot_momentum_dynamics(
+        iterations, mean_cum, std_cum, mean_new,
+        method=method,
+        n_seeds=len(per_run),
+        out=args.out,
+    )
+
+
+if __name__ == "__main__":
+    main()
