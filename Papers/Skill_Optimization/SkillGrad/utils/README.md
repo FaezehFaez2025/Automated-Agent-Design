@@ -116,9 +116,11 @@ Saves a PNG to `results/skill_evolution.png`.
 
 ## Momentum Dynamics Visualizer
 
-Plots cumulative / new pattern counts from `train/iter_*/momentum_memory.md`
-(SkillGrad paper Fig. 5 style). Pass one or more folder names under
-`results/runs/`; multiple folders are averaged (shaded ±std band).
+Plots cumulative / new pattern counts from `train/iter_*/momentum_memory.md`,
+matching Fig. 5 in the SkillGrad paper
+([arXiv:2605.27760](https://arxiv.org/abs/2605.27760)).
+Pass one or more folder names under `results/runs/`; multiple folders are
+averaged (shaded ±std band).
 
 **Script:** `visualize_momentum_dynamics.py`
 
