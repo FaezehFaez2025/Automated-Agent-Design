@@ -23,3 +23,9 @@ PATTERN_RE = re.compile(r"^###\s+(\S+)\s*\|", re.MULTILINE)
 # 1. Data: read momentum memories and count patterns
 # ---------------------------------------------------------------------------
 
+def parse_pattern_slugs(memory_path: Path) -> set[str]:
+    """Pattern ids from headings: ``### <id> | kind | description``."""
+    text = memory_path.read_text(encoding="utf-8")
+    return set(PATTERN_RE.findall(text))
+
+
