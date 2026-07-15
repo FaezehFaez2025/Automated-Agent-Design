@@ -299,12 +299,23 @@ async def run_training(
 
         diag_tasks = []
         for a in failed:
+            # Standard SkillGrad failure diagnosis (always run, foil-agnostic).
             diag_tasks.append(run_diagnose(
                 a, "failure", iter_dir, skills_dir,
                 base_trajectories_dir, model, project_root,
                 semaphore, cost_tracker,
-                foil_assessment=foil_map.get(a["id"]),
             ))
+            # Additional foil diagnosis as an extra signal, when a foil exists.
+            # This is appended alongside the failure diagnosis rather than
+            # replacing it, so the patcher sees both.
+            foil = foil_map.get(a["id"])
+            if foil is not None:
+                diag_tasks.append(run_diagnose(
+                    a, "failure", iter_dir, skills_dir,
+                    base_trajectories_dir, model, project_root,
+                    semaphore, cost_tracker,
+                    foil_assessment=foil,
+                ))
         for a in contrastive:
             diag_tasks.append(run_diagnose(
                 a, "contrastive", iter_dir, skills_dir,

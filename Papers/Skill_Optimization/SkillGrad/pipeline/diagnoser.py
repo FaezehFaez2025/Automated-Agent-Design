@@ -198,8 +198,11 @@ async def run_diagnose(
             tools=[read_file],
         )
 
-        # Run
-        diag_dir = iter_dir / f"diagnose_{ex_id}"
+        # Run. Foil diagnosis for a failed task is written to a separate
+        # subfolder so it does not overwrite the standard failure diagnosis,
+        # which shares the same task id.
+        suffix = "_foil" if diagnosis_type == "foil" else ""
+        diag_dir = iter_dir / f"diagnose_{ex_id}{suffix}"
         diag_dir.mkdir(parents=True, exist_ok=True)
         logger = TrajectoryLogger(diag_dir / "diagnosis.jsonl")
 
