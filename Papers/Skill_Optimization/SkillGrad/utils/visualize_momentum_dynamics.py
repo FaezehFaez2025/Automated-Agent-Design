@@ -11,9 +11,10 @@ Reads ``train/iter_*/momentum_memory.md`` (pattern record ``M_t``) and plots:
 from __future__ import annotations
 
 import argparse
-import math
 import re
 from pathlib import Path
+
+from plot_common import mean_std, method_name
 
 
 PATTERN_RE = re.compile(r"^###\s+(\S+)\s*\|", re.MULTILINE)
@@ -53,25 +54,6 @@ def dynamics_for_run(run_dir: Path) -> dict[int, tuple[int, int]]:
         ever_seen |= slugs
         out[iteration] = (len(ever_seen), len(new))
     return out
-
-
-def mean_std(values: list[float]) -> tuple[float, float]:
-    if not values:
-        return float("nan"), float("nan")
-    mean = sum(values) / len(values)
-    if len(values) == 1:
-        return mean, 0.0
-    var = sum((v - mean) ** 2 for v in values) / len(values)
-    return mean, math.sqrt(var)
-
-
-def method_name(run_id: str) -> str:
-    rid = run_id.lower()
-    if rid.startswith("foil") or "foil" in rid.split("_")[0]:
-        return "Foil"
-    if "skillgrad" in rid:
-        return "SkillGrad"
-    return run_id
 
 
 def aggregate_runs(
