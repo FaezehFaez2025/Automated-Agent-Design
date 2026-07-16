@@ -11,8 +11,15 @@
 #   METHOD=foil bash scripts/eval.sh              # after train_foil.sh
 
 MODEL="${MODEL:-gpt-5.4}"
-METHOD="${METHOD:-skillgrad}"
-RUN_ID="${METHOD}_${MODEL}"
+
+if [ "${FOIL:-0}" = "1" ]; then
+  METHOD="${METHOD:-foil}"
+else
+  METHOD="${METHOD:-skillgrad}"
+fi
+
+# Build RUN_ID from METHOD/MODEL(/RUN) unless the caller set RUN_ID explicitly.
+RUN_ID="${RUN_ID:-${METHOD}_${MODEL}${RUN:+_run_${RUN}}}"
 
 python -m runners.stream_runner eval \
     --skill-dir results/runs/${RUN_ID}/train/final_skill \
