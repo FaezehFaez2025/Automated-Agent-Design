@@ -23,6 +23,8 @@ python -m pipeline.training \
     --skills-dir ${SKILLS_DIR} \
     --results-root results \
     --method skillgrad \
+    ${RUN:+--config-tag run_${RUN}} \
     --model ${MODEL} \
     --master-seed 0 --heldout-seed 42 --training-seed 0 \
-    --n-train 40 --batch-size 4 --max-turns 30 --concurrency 4
+    --n-train 40 --batch-size 4 --max-turns 30 --concurrency 4 \
+    "$@"
