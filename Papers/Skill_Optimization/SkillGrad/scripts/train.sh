@@ -18,13 +18,22 @@
 MODEL="${MODEL:-gpt-5.4}"
 SKILLS_DIR="${SKILLS_DIR:-seeds}"
 
+if [ "${FOIL:-0}" = "1" ]; then
+  METHOD="foil"
+  FOIL_FLAG="--foil"
+else
+  METHOD="skillgrad"
+  FOIL_FLAG=""
+fi
+
 python -m pipeline.training \
     --data-dir data/benchmarks/spreadsheetbench \
     --skills-dir ${SKILLS_DIR} \
     --results-root results \
-    --method skillgrad \
+    --method ${METHOD} \
     ${RUN:+--config-tag run_${RUN}} \
     --model ${MODEL} \
     --master-seed 0 --heldout-seed 42 --training-seed 0 \
     --n-train 40 --batch-size 4 --max-turns 30 --concurrency 4 \
+    ${FOIL_FLAG} \
     "$@"
