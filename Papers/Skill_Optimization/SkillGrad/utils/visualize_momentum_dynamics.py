@@ -60,11 +60,16 @@ def aggregate_runs(
     per_run: list[dict[int, tuple[int, int]]],
 ) -> tuple[list[int], list[float], list[float], list[float]]:
     """Average cumulative / new counts across seeds for each iteration."""
-    iterations = sorted({it for d in per_run for it in d})
+    all_iters = {it for d in per_run for it in d}
+    iterations = list(range(min(all_iters), max(all_iters) + 1)) if all_iters else []
     mean_cum, std_cum, mean_new = [], [], []
     for it in iterations:
-        cums = [float(d[it][0]) for d in per_run if it in d]
-        news = [float(d[it][1]) for d in per_run if it in d]
+        cums, news = [], []
+        for d in per_run:
+            # Forward-fill: cumulative at the latest iteration ≤ it.
+            prior_iters = [i for i in d if i <= it]
+            cums.append(float(d[max(prior_iters)][0]) if prior_iters else 0.0)
+            news.append(float(d[it][1]) if it in d else 0.0)
         mc, sc = mean_std(cums)
         mn, _ = mean_std(news)
         mean_cum.append(mc)
