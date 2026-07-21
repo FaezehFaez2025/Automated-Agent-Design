@@ -152,3 +152,25 @@ def plot_patch_magnitude(
     print(f"  Saved → {out}")
 
 
+# ---------------------------------------------------------------------------
+# 3. CLI
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Plot patch magnitude per iteration.")
+    parser.add_argument(
+        "--runs-root", type=Path, default=Path("results/runs"),
+        help="Directory that contains run folders (default: results/runs).",
+    )
+    parser.add_argument("--runs", nargs="+", help="Run folder names under results/runs/.")
+    parser.add_argument(
+        "--out", type=Path, default=Path("results/patch_magnitude.png"),
+    )
+    args = parser.parse_args()
+
+    if not args.runs:
+        raise SystemExit("Pass at least one folder with --runs FOLDER [FOLDER ...]")
+
+    per_run: list[dict[int, tuple[int, int]]] = []
+    used_ids: list[str] = []
+    
