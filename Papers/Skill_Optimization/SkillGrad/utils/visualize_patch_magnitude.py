@@ -173,7 +173,22 @@ def main() -> None:
 
     per_run: list[dict[int, tuple[int, int]]] = []
     used_ids: list[str] = []
+    for folder in args.runs:
+        mags = patch_magnitudes_for_run(args.runs_root / folder)
+        if not mags:
+            print(f"  [skip] {folder}: no skill snapshots found")
+            continue
+        print(f"  {method_name(folder)} ({folder}):")
+        for it in sorted(mags):
+            a, r = mags[it]
+            print(f"    iter {it:>2}: +{a} / -{r} words")
+        per_run.append(mags)
+        used_ids.append(folder)
 
+    if not per_run:
+        raise SystemExit("No usable runs.")
+
+    
 
     plot_patch_magnitude(
         iterations, mean_added, std_added, mean_removed,
