@@ -69,3 +69,28 @@ def word_diff(before: list[str], after: list[str]) -> tuple[int, int]:
     return added, removed
 
 
+def diff_skill_trees(before_dir: Path, after_dir: Path) -> tuple[int, int]:
+    """Diff two xlsx/ trees file-by-file; sum added / removed words."""
+    before_files = list_skill_files(before_dir)
+    after_files = list_skill_files(after_dir)
+    total_added = total_removed = 0
+    for key in set(before_files) | set(after_files):
+        before_w = file_words(before_files[key]) if key in before_files else []
+        after_w = file_words(after_files[key]) if key in after_files else []
+        a, r = word_diff(before_w, after_w)
+        total_added += a
+        total_removed += r
+    return total_added, total_removed
+
+
+def patch_magnitudes_for_run(run_dir: Path) -> dict[int, tuple[int, int]]:
+    """{iteration: (added, removed)} for one run (1-indexed)."""
+    versions = collect_snapshot_dirs(run_dir / "train")
+    if len(versions) < 2:
+        return {}
+    out = {}
+    for i in range(len(versions) - 1):
+        out[i + 1] = diff_skill_trees(versions[i], versions[i + 1])
+    return out
+
+
