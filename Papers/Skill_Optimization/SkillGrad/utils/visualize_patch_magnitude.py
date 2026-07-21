@@ -53,4 +53,19 @@ def file_words(path: Path) -> list[str]:
     return WORD_RE.findall(text)
 
 
+def word_diff(before: list[str], after: list[str]) -> tuple[int, int]:
+    """Return (n_added, n_removed) via SequenceMatcher opcodes."""
+    added = removed = 0
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(
+        a=before, b=after, autojunk=False
+    ).get_opcodes():
+        if tag == "insert":
+            added += j2 - j1
+        elif tag == "delete":
+            removed += i2 - i1
+        elif tag == "replace":
+            removed += i2 - i1
+            added += j2 - j1
+    return added, removed
+
 
