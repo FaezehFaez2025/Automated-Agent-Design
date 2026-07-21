@@ -188,7 +188,17 @@ def main() -> None:
     if not per_run:
         raise SystemExit("No usable runs.")
 
-    
+    method = " / ".join(dict.fromkeys(method_name(r) for r in used_ids))
+    iterations = sorted({it for m in per_run for it in m})
+    mean_added, std_added, mean_removed = [], [], []
+    for it in iterations:
+        adds = [float(m[it][0]) for m in per_run if it in m]
+        rems = [float(m[it][1]) for m in per_run if it in m]
+        ma, sa = mean_std(adds)
+        mr, _ = mean_std(rems)
+        mean_added.append(ma)
+        std_added.append(sa)
+        mean_removed.append(mr)
 
     plot_patch_magnitude(
         iterations, mean_added, std_added, mean_removed,
