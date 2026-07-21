@@ -94,3 +94,61 @@ def patch_magnitudes_for_run(run_dir: Path) -> dict[int, tuple[int, int]]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# 2. Plot
+# ---------------------------------------------------------------------------
+
+def plot_patch_magnitude(
+    iterations: list[int],
+    mean_added: list[float],
+    std_added: list[float],
+    mean_removed: list[float],
+    *,
+    method: str,
+    n_seeds: int,
+    out: Path,
+) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(8.0, 4.2))
+    x = list(range(len(iterations)))
+    width = 0.55
+
+    ax.bar(
+        x, mean_added, width=width, color="#9ecae1", edgecolor="#6baed6",
+        label="Added",
+        yerr=std_added if n_seeds > 1 else None,
+        capsize=3, error_kw={"ecolor": "#3182bd", "lw": 1.2},
+    )
+    ax.bar(
+        x, [-v for v in mean_removed], width=width,
+        color="#fbb4ae", edgecolor="#fc9272", label="Removed",
+    )
+
+    ax.axhline(0, color="#555", lw=0.8)
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(it) for it in iterations])
+    ax.set_xlabel("Iteration")
+    ax.set_ylabel("Words")
+    ax.set_title(f"Patch magnitude per iteration — {method}")
+    ax.legend(frameon=True, loc="upper right")
+    ax.grid(True, axis="y", ls=":", alpha=0.35)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    if mean_added:
+        later = mean_added[1:] if len(mean_added) > 1 else []
+        later_mean = sum(later) / len(later) if later else float("nan")
+        print(
+            f"  [{method}] Iter 1 mean added ≈ {mean_added[0]:.0f} words; "
+            f"iters 2–{iterations[-1]} mean added ≈ {later_mean:.0f} words"
+        )
+
+    fig.tight_layout()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=160, bbox_inches="tight")
+    print(f"  Saved → {out}")
+
+
