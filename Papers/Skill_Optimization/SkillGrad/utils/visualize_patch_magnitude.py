@@ -34,3 +34,14 @@ def collect_snapshot_dirs(train_dir: Path) -> list[Path]:
     return versions
 
 
+def list_skill_files(xlsx_dir: Path) -> dict[str, Path]:
+    """Map relative path -> absolute path for every file under xlsx/."""
+    files = {}
+    if not xlsx_dir.is_dir():
+        return files
+    for path in xlsx_dir.rglob("*"):
+        if path.is_file():
+            files[str(path.relative_to(xlsx_dir))] = path
+    return files
+
+
