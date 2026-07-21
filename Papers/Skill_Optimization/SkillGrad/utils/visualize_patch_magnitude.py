@@ -173,4 +173,13 @@ def main() -> None:
 
     per_run: list[dict[int, tuple[int, int]]] = []
     used_ids: list[str] = []
-    
+
+
+    plot_patch_magnitude(
+        iterations, mean_added, std_added, mean_removed,
+        method=method, n_seeds=len(per_run), out=args.out,
+    )
+
+
+if __name__ == "__main__":
+    main()
