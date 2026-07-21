@@ -45,3 +45,12 @@ def list_skill_files(xlsx_dir: Path) -> dict[str, Path]:
     return files
 
 
+def file_words(path: Path) -> list[str]:
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    return WORD_RE.findall(text)
+
+
+
